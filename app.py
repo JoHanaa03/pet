@@ -14,15 +14,12 @@ st.set_page_config(
 )
 
 # ── DB 연결 ────────────────────────────────────────────────────────────────────
-DB_PATH = os.path.join(os.path.dirname(__file__), "seoul_pet_data.db")
-
-@st.cache_resource
-def get_conn():
-    return sqlite3.connect(DB_PATH, check_same_thread=False)
+DB_PATH = os.path.join(os.path.dirname(__file__), "pet.db")
 
 @st.cache_data
 def query(sql: str) -> pd.DataFrame:
-    return pd.read_sql(sql, get_conn())
+    with sqlite3.connect(DB_PATH) as conn:
+        return pd.read_sql(sql, conn)
 
 # ── 헤더 ───────────────────────────────────────────────────────────────────────
 st.title("🐾 서울시 반려동물 공공데이터 분석 대시보드")
