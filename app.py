@@ -148,8 +148,8 @@ df2 = query(SQL_2)
 col_chart2, col_sql2 = st.columns([3, 2])
 
 with col_chart2:
-    # 정렬: 실내비율 내림차순
-    df2_sorted = df2.sort_values("실내비율_pct", ascending=True)
+    # 정렬: 실외비율 높은 순 (수평막대라 ascending=True가 화면 위→아래 기준)
+    df2_sorted = df2.sort_values("실외비율_pct", ascending=True)
 
     fig2 = go.Figure()
     fig2.add_trace(go.Bar(
