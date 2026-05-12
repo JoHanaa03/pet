@@ -249,23 +249,27 @@ col_chart3, col_sql3 = st.columns([3, 2])
 
 with col_chart3:
     # 트리맵: 면적=등록동물수, 색상=반려화율
+    # %{color}는 Plotly 버전에 따라 NaN을 반환하므로 customdata로 명시적 전달
     fig3 = px.treemap(
         df3,
         path=["자치구"],
         values="등록동물수",
         color="반려화율_pct",
         color_continuous_scale="YlOrRd",
-        hover_data={
-            "인구수": True,
-            "반려화율_pct": ":.2f",
-            "동물밀도_per_km2": ":.1f",
-            "반려시설수": True,
-        },
+        custom_data=["반려화율_pct", "동물밀도_per_km2", "인구수", "반려시설수"],
         title="자치구별 반려동물 밀집도<br>(면적=등록동물수, 색상=반려화율%)",
         height=480,
     )
     fig3.update_traces(
-        texttemplate="<b>%{label}</b><br>%{value:,}마리<br>반려화율 %{color:.1f}%",
+        texttemplate="<b>%{label}</b><br>%{value:,}마리<br>반려화율 %{customdata[0]:.1f}%",
+        hovertemplate=(
+            "<b>%{label}</b><br>"
+            "등록동물수: %{value:,}마리<br>"
+            "반려화율: %{customdata[0]:.2f}%<br>"
+            "동물밀도: %{customdata[1]:.1f}마리/km²<br>"
+            "인구수: %{customdata[2]:,}명<br>"
+            "반려시설수: %{customdata[3]}개<extra></extra>"
+        ),
         textfont_size=13,
     )
     fig3.update_layout(coloraxis_colorbar=dict(title="반려화율(%)"))
